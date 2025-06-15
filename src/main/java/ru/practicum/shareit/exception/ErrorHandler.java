@@ -24,4 +24,8 @@ public class ErrorHandler {
         return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleAccessDenied(final AccessDeniedException e) {
+        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.FORBIDDEN);
+    }
 }

@@ -23,4 +23,16 @@ public class ItemMapper {
                 owner,
                 null);
     }
+
+    public static void updateItemFromDto(ItemDto itemDto, Item target) {
+        if (itemDto.getName() != null) {
+            target.setName(itemDto.getName());
+        }
+        if (itemDto.getDescription() != null) {
+            target.setDescription(itemDto.getDescription());
+        }
+        if (itemDto.getAvailable() != null) {
+            target.setAvailable(itemDto.getAvailable());
+        }
+    }
 }

@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
@@ -27,11 +28,10 @@ public class ItemService {
         Item existing = itemStorage.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
         if (!existing.getOwner().getId().equals(ownerId)) {
-            throw new NotFoundException("Только владелец может редактировать вещь");
+            throw new AccessDeniedException("Только владелец может редактировать вещь");
         }
-        if (itemDto.getName() != null) existing.setName(itemDto.getName());
-        if (itemDto.getDescription() != null) existing.setDescription(itemDto.getDescription());
-        if (itemDto.getAvailable() != null) existing.setAvailable(itemDto.getAvailable());
+
+        ItemMapper.updateItemFromDto(itemDto, existing);
         return ItemMapper.toItemDto(itemStorage.updateItem(existing));
     }
 
@@ -48,8 +48,12 @@ public class ItemService {
     }
 
     public List<ItemDto> searchItems(String text) {
-        if (text.isEmpty()) return List.of();
+        if (text.isEmpty()) {
+            return List.of();
+        }
+        // Фильтрация по available уже была реализована в storage, или правильнее делать её в сервисе?
         return itemStorage.searchItem(text).stream()
+                .filter(Item::getAvailable)
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }

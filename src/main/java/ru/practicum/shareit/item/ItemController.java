@@ -7,9 +7,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping("/items")
 @AllArgsConstructor
@@ -25,6 +22,10 @@ public class ItemController {
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @PathVariable Long itemId,
                               @RequestBody ItemDto itemDto) {
+        /* При добавлении валидации не проходят API тесты, т.к патч-запросы передают изменяемые поля или часть полей
+           соответсвенно валидироваться не могут.
+           Как я понял патч-маппингу не нужна валидация, т.к это частичное обновление
+           Скажи если ошибаюсь */
         return itemService.updateItem(userId, itemId, itemDto);
     }
 
