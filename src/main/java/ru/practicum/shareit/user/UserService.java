@@ -23,17 +23,17 @@ public class UserService {
     }
 
     public List<UserDto> getAllUsers() {
-        return userStorage.findAllUsers().stream()
+        return userStorage.findAll().stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
     public UserDto createUser(UserDto userDto) {
         if (userDto.getEmail() == null) throw new ValidationException("Неккоректный емайл");
-        if (userStorage.findByEmail(userDto.getEmail()).isPresent())
+        if (userStorage.existsByEmail(userDto.getEmail()))
             throw new ConflictException("Пользователь с таким email уже существует");
         User user = UserMapper.toUser(userDto);
-        return UserMapper.toUserDto(userStorage.saveUser(user));
+        return UserMapper.toUserDto(userStorage.save(user));
     }
 
     public UserDto updateUser(Long id, UserDto userDto) {
@@ -41,7 +41,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
         if (userDto.getEmail() != null) {
-            if (userStorage.findByEmail(userDto.getEmail()).isPresent()
+            if (userStorage.existsByEmail(userDto.getEmail())
                     && !existing.getEmail().equals(userDto.getEmail())) {
                 throw new ConflictException("Пользователь с таким email уже существует");
             }
@@ -52,11 +52,11 @@ public class UserService {
             existing.setName(userDto.getName());
         }
 
-        return UserMapper.toUserDto(userStorage.updateUser(existing));
+        return UserMapper.toUserDto(userStorage.save(existing));
     }
 
     public void deleteUser(Long id) {
         getUser(id);
-        userStorage.deleteUser(id);
+        userStorage.deleteById(id);
     }
 }

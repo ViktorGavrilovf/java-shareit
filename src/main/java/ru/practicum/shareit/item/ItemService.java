@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
 
@@ -21,7 +20,7 @@ public class ItemService {
     public ItemDto addItem(Long ownerId, ItemDto itemDto) {
         User owner = userStorage.findById(ownerId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        return ItemMapper.toItemDto(itemStorage.saveItem(ItemMapper.toItem(itemDto, owner)));
+        return ItemMapper.toItemDto(itemStorage.save(ItemMapper.toItem(itemDto, owner)));
     }
 
     public ItemDto updateItem(Long ownerId, Long itemId, ItemDto itemDto) {
@@ -32,7 +31,7 @@ public class ItemService {
         }
 
         ItemMapper.updateItemFromDto(itemDto, existing);
-        return ItemMapper.toItemDto(itemStorage.updateItem(existing));
+        return ItemMapper.toItemDto(itemStorage.save(existing));
     }
 
     public ItemDto getItem(Long itemId) {
@@ -42,7 +41,7 @@ public class ItemService {
     }
 
     public List<ItemDto> getItemsByOwner(Long ownerId) {
-        return itemStorage.getAllItems(ownerId).stream()
+        return itemStorage.findAllByOwnerId(ownerId).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
@@ -51,8 +50,7 @@ public class ItemService {
         if (text.isEmpty()) {
             return List.of();
         }
-        // Фильтрация по available уже была реализована в storage, или правильнее делать её в сервисе?
-        return itemStorage.searchItem(text).stream()
+        return itemStorage.searchAvailable(text).stream()
                 .filter(Item::getAvailable)
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
