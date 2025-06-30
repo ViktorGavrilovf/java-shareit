@@ -2,7 +2,6 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.User;
@@ -27,7 +26,7 @@ public class ItemService {
         Item existing = itemStorage.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
         if (!existing.getOwner().getId().equals(ownerId)) {
-            throw new AccessDeniedException("Только владелец может редактировать вещь");
+            throw new NotFoundException("Только владелец может редактировать вещь");
         }
 
         ItemMapper.updateItemFromDto(itemDto, existing);
