@@ -13,7 +13,7 @@ public interface ItemRequestStorage extends JpaRepository<ItemRequest, Long> {
     @Query("""
             select r from ItemRequest r
             where r.requestor.id <> :requestorId
-            order by r.created desc 
+            order by r.created desc
             """)
     List<ItemRequest> findAllByOtherRequests(@Param("requestorId") Long requestorId);
 }
