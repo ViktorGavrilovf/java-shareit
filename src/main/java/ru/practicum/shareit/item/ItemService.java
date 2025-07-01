@@ -3,10 +3,12 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 public class ItemService {
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
+    private final CommentRepository commentRepository;
 
     public ItemDto addItem(Long ownerId, ItemDto itemDto) {
         User owner = userStorage.findById(ownerId)
@@ -34,15 +37,26 @@ public class ItemService {
     }
 
     public ItemDto getItem(Long itemId) {
-        return itemStorage.findById(itemId)
-                .map(ItemMapper::toItemDto)
-                .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
+        Item item = itemStorage.findById(itemId).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
+        List<Comment> comments = commentRepository.findByItemIdOrderByCreatedDesc(itemId);
+        List<CommentDto> commentDtos = comments.stream().map(CommentMapper::toDto).toList();
+        ItemDto itemDto = ItemMapper.toItemDto(item);
+        itemDto.setComments(commentDtos);
+        return itemDto;
     }
 
     public List<ItemDto> getItemsByOwner(Long ownerId) {
-        return itemStorage.findAllByOwnerId(ownerId).stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
+        List<ItemDto> result = new ArrayList<>();
+        List<Item> items = itemStorage.findAllByOwnerId(ownerId);
+        for (Item item : items) {
+            List<CommentDto> comments = commentRepository.findByItemIdOrderByCreatedDesc(item.getId()).stream()
+                    .map(CommentMapper::toDto)
+                    .toList();
+            ItemDto itemDto = ItemMapper.toItemDto(item);
+            itemDto.setComments(comments);
+            result.add(itemDto);
+        }
+        return result;
     }
 
     public List<ItemDto> searchItems(String text) {
