@@ -10,9 +10,9 @@ import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemStorage;
+import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserStorage;
+import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,15 +24,15 @@ import java.util.stream.Collectors;
 @Transactional
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
-    private final UserStorage userStorage;
-    private final ItemStorage itemStorage;
+    private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
 
     @Override
     public BookingDto createBooking(Long userId, BookingCreateDto dto) {
-        User booker = userStorage.findById(userId)
+        User booker = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
-        Item item = itemStorage.findById(dto.getItemId())
+        Item item = itemRepository.findById(dto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
 
         if (item.getOwner().getId().equals(userId)) {
@@ -89,7 +89,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getBookingsForUser(Long userId, String state) {
-        userStorage.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Sort sort = Sort.by("start").descending();
 
         switch (state) {
@@ -129,7 +129,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getBookingsForOwner(Long ownerId, String state) {
-        userStorage.findById(ownerId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        userRepository.findById(ownerId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
         Sort sort = Sort.by("start").descending();
 

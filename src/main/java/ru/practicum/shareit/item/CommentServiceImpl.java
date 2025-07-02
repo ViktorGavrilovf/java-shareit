@@ -7,22 +7,22 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserStorage;
+import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final ItemStorage itemStorage;
+    private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
 
     @Override
     public CommentDto addComment(Long userId, Long itemId, CommentDto dto) {
-        User user = userStorage.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        Item item = itemStorage.findById(itemId).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
         if (bookingRepository.findByBookerIdAndItemIdAndEndBefore(userId, itemId, LocalDateTime.now()).isEmpty()) {
             throw new ValidationException("Комментарий может оставить только тот, кто уже арендовал вещь");
         }

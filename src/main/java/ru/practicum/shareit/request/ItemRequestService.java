@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserStorage;
+import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ItemRequestService {
     private final ItemRequestStorage itemRequestStorage;
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
 
     public ItemRequestDto addRequest(Long userId, ItemRequestDto dto) {
-        User user = userStorage.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         ItemRequest request = new ItemRequest();
         request.setDescription(dto.getDescription());
         request.setRequestor(user);
@@ -27,7 +27,7 @@ public class ItemRequestService {
     }
 
     public List<ItemRequestDto> getOwnRequests(Long userId) {
-        userStorage.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         return itemRequestStorage.findAllByRequestorIdOrderByCreatedDesc(userId)
                 .stream()
                 .map(ItemRequestMapper::toDto)
@@ -35,14 +35,14 @@ public class ItemRequestService {
     }
 
     public List<ItemRequestDto> getAllRequests(Long userId) {
-        userStorage.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         return itemRequestStorage.findAllByOtherRequests(userId).stream()
                 .map(ItemRequestMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public ItemRequestDto getRequestById(Long userId, Long requestId) {
-        userStorage.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         ItemRequest itemRequest = itemRequestStorage.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Запрос не найден"));
         return ItemRequestMapper.toDto(itemRequest);
