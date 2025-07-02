@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ItemRequestStorage extends JpaRepository<ItemRequest, Long> {
+public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> {
 
     List<ItemRequest> findAllByRequestorIdOrderByCreatedDesc(Long requestorId);
 

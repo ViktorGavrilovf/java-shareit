@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ItemRequestService {
-    private final ItemRequestStorage itemRequestStorage;
+    private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
 
     public ItemRequestDto addRequest(Long userId, ItemRequestDto dto) {
@@ -23,12 +23,12 @@ public class ItemRequestService {
         request.setDescription(dto.getDescription());
         request.setRequestor(user);
         request.setCreated(LocalDateTime.now());
-        return ItemRequestMapper.toDto(itemRequestStorage.save(request));
+        return ItemRequestMapper.toDto(itemRequestRepository.save(request));
     }
 
     public List<ItemRequestDto> getOwnRequests(Long userId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        return itemRequestStorage.findAllByRequestorIdOrderByCreatedDesc(userId)
+        return itemRequestRepository.findAllByRequestorIdOrderByCreatedDesc(userId)
                 .stream()
                 .map(ItemRequestMapper::toDto)
                 .collect(Collectors.toList());
@@ -36,14 +36,14 @@ public class ItemRequestService {
 
     public List<ItemRequestDto> getAllRequests(Long userId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        return itemRequestStorage.findAllByOtherRequests(userId).stream()
+        return itemRequestRepository.findAllByOtherRequests(userId).stream()
                 .map(ItemRequestMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public ItemRequestDto getRequestById(Long userId, Long requestId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        ItemRequest itemRequest = itemRequestStorage.findById(requestId)
+        ItemRequest itemRequest = itemRequestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Запрос не найден"));
         return ItemRequestMapper.toDto(itemRequest);
     }
