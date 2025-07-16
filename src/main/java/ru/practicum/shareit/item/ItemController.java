@@ -3,6 +3,8 @@ package ru.practicum.shareit.item;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemController {
     private final ItemService itemService;
+    private final CommentService commentService;
 
     @PostMapping
     public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long userId, @Valid @RequestBody ItemDto itemDto) {
@@ -22,25 +25,29 @@ public class ItemController {
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @PathVariable Long itemId,
                               @RequestBody ItemDto itemDto) {
-        /* При добавлении валидации не проходят API тесты, т.к патч-запросы передают изменяемые поля или часть полей
-           соответсвенно валидироваться не могут.
-           Как я понял патч-маппингу не нужна валидация, т.к это частичное обновление
-           Скажи если ошибаюсь */
         return itemService.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable Long itemId) {
-        return itemService.getItem(itemId);
+    public ItemWithBookingDto  getItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                           @PathVariable Long itemId) {
+        return itemService.getItem(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemWithBookingDto> getItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.getItemsByOwner(userId);
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItems(@RequestParam String text) {
         return itemService.searchItems(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                 @PathVariable Long itemId,
+                                 @RequestBody CommentDto commentDto) {
+        return commentService.addComment(userId, itemId, commentDto);
     }
 }
