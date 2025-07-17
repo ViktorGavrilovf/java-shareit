@@ -23,4 +23,6 @@ public class ItemDto {
     private Boolean available;
 
     private List<CommentDto> comments;
+
+    private Long requestId;
 }
