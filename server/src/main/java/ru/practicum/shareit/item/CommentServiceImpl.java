@@ -3,9 +3,9 @@ package ru.practicum.shareit.item;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.dto.items.CommentDto;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 

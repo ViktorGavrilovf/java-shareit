@@ -3,13 +3,14 @@ package ru.practicum.shareit.user;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.dto.user.UserDto;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users")
 @AllArgsConstructor
+@Deprecated
 public class UserController {
     private UserService userService;
 

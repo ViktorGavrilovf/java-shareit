@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.dto.booking.BookingStatus;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 

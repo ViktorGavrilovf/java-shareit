@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.dto.booking;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;

@@ -2,10 +2,10 @@ package ru.practicum.shareit.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.dto.user.UserDto;
 import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
 import java.util.stream.Collectors;

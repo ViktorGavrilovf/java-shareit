@@ -7,7 +7,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.dto.user.UserDto;
 
 @Component
 public class UserClient extends BaseClient {

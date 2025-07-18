@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.dto;
+package ru.practicum.shareit.dto.user;
 
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;

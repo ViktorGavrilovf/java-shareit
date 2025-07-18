@@ -3,9 +3,9 @@ package ru.practicum.shareit.item;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemWithBookingDto;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.dto.items.CommentDto;
+import ru.practicum.shareit.dto.items.ItemDto;
+import ru.practicum.shareit.dto.items.ItemWithBookingDto;
 
 import java.util.List;
 
@@ -29,8 +29,8 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemWithBookingDto  getItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                           @PathVariable Long itemId) {
+    public ItemWithBookingDto getItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                      @PathVariable Long itemId) {
         return itemService.getItem(itemId, userId);
     }
 
