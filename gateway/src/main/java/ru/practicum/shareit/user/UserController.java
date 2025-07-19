@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getUser(@Valid @PathVariable Long id) {
+    public ResponseEntity<Object> getUser(@PathVariable Long id) {
         return userClient.getUser(id);
     }
 
@@ -28,7 +28,8 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+    public ResponseEntity<Object> updateUser(@PathVariable Long id,
+                                             @Valid @RequestBody UserDto userDto) {
         return userClient.updateUser(id, userDto);
     }
 
