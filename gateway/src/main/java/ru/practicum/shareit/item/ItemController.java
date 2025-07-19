@@ -29,7 +29,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                           @PathVariable Long itemId) {
-        return itemClient.getItem(itemId, userId);
+        return itemClient.getItem(userId, itemId);
     }
 
     @GetMapping
