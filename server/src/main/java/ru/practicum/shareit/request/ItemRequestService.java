@@ -31,16 +31,17 @@ public class ItemRequestService {
         return ItemRequestMapper.toDto(itemRequestRepository.save(request));
     }
 
-    public List<ItemRequestWithAnswersDto> getOwnRequests(Long userId) {
-        checkExistUser(userId);
-        return itemRequestRepository.findAllByRequestorIdOrderByCreatedDesc(userId).stream()
-                .map(request -> ItemRequestMapper.toDtoWithAnswers(request,
-                        itemRepository.findAllByRequestId(request.getId()).stream()
-                                .map(ItemMapper::toItemDto)
-                                .collect(Collectors.toList())
-                ))
-                .collect(Collectors.toList());
+        public List<ItemRequestWithAnswersDto> getOwnRequests(Long userId) {
+            checkExistUser(userId);
+            return itemRequestRepository.findAllByRequestorIdOrderByCreatedDesc(userId).stream()
+                    .map(request -> ItemRequestMapper.toDtoWithAnswers(request,
+                            itemRepository.findAllByRequestId(request.getId()).stream()
+                                    .map(ItemMapper::toItemDto)
+                                    .collect(Collectors.toList())
+                    ))
+                    .collect(Collectors.toList());
     }
+
         public List<ItemRequestWithAnswersDto> getAllRequests(Long userId) {
             checkExistUser(userId);
             return itemRequestRepository.findAllByOtherRequests(userId).stream()
