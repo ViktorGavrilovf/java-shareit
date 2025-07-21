@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,7 +24,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Import({ItemServiceImpl.class, ItemMapper.class, CommentServiceImpl.class, CommentMapper.class})
 public class ItemServiceImplIntegrationTest {
 
@@ -57,6 +57,13 @@ public class ItemServiceImplIntegrationTest {
 
     @BeforeEach
     void setup() {
+        bookingRepository.deleteAll();
+        commentRepository.deleteAll();
+        itemRepository.deleteAll();
+        requestRepository.deleteAll();
+        userRepository.deleteAll();
+
+
         owner = userRepository.save(User.builder()
                 .name("Owner")
                 .email("owner@mail.com")
@@ -100,11 +107,8 @@ public class ItemServiceImplIntegrationTest {
     }
 
     @Test
-    @Order(1)
     void testGetItem() {
-        ItemWithBookingDto result  = itemService.getItem(owner.getId(), item.getId());
-        System.out.println("item.getId() = " + item.getId());
-
+        ItemWithBookingDto result = itemService.getItem(item.getId(), owner.getId());
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(item.getId());
