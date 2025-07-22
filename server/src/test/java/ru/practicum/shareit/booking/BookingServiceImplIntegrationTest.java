@@ -9,6 +9,7 @@ import ru.practicum.shareit.dto.booking.BookingCreateDto;
 import ru.practicum.shareit.dto.booking.BookingDto;
 import ru.practicum.shareit.dto.booking.BookingStatus;
 import ru.practicum.shareit.exception.AccessDeniedException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
@@ -85,7 +86,8 @@ class BookingServiceImplIntegrationTest {
         assertThat(bookingDto.getStatus()).isEqualTo(BookingStatus.WAITING);
         assertThat(bookingDto.getItem().getId()).isEqualTo(item.getId());
 
-        Booking bookingFromDb = bookingRepository.findById(bookingDto.getId()).orElseThrow();
+        Booking bookingFromDb = bookingRepository.findById(bookingDto.getId()).orElseThrow(
+                () -> new NotFoundException("Бронирование не найдено"));
         assertThat(bookingFromDb).isNotNull();
     }
 

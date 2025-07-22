@@ -7,6 +7,9 @@ import ru.practicum.shareit.user.UserMapper;
 public class BookingMapper {
 
     public static BookingDto toBookingDto(Booking booking) {
+        if (booking == null) {
+            return null;
+        }
         BookingDto dto = new BookingDto();
         dto.setId(booking.getId());
         dto.setStart(booking.getStart());

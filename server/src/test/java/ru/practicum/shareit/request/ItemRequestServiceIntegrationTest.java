@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import ru.practicum.shareit.dto.request.ItemRequestDto;
 import ru.practicum.shareit.dto.request.ItemRequestWithAnswersDto;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
@@ -79,7 +80,8 @@ class ItemRequestServiceIntegrationTest {
         assertThat(result.getDescription()).isEqualTo("Дрель");
         assertThat(result.getId()).isNotNull();
 
-        ItemRequest fromDb = requestRepository.findById(result.getId()).orElseThrow();
+        ItemRequest fromDb = requestRepository.findById(result.getId()).orElseThrow(
+                () -> new NotFoundException("Вещь не найдена"));
 
         assertThat(fromDb).isNotNull();
         assertThat(fromDb.getDescription()).isEqualTo(result.getDescription());

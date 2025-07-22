@@ -9,6 +9,9 @@ import java.util.List;
 
 public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
+        if (item == null) {
+            return null;
+        }
         ItemDto dto = new ItemDto();
         dto.setId(item.getId());
         dto.setName(item.getName());
@@ -19,6 +22,9 @@ public class ItemMapper {
     }
 
     public static Item toItem(ItemDto dto, User owner) {
+        if (dto == null || owner == null) {
+            return null;
+        }
         Item item = new Item();
         item.setId(dto.getId());
         item.setName(dto.getName());
@@ -48,6 +54,9 @@ public class ItemMapper {
     }
 
     public static ItemWithBookingDto toItemWithBookingDto(Item item) {
+        if (item == null) {
+            return null;
+        }
         return new ItemWithBookingDto(
                 item.getId(),
                 item.getName(),

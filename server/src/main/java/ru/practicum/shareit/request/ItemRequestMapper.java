@@ -8,6 +8,9 @@ import java.util.List;
 
 public class ItemRequestMapper {
     public static ItemRequestDto toDto(ItemRequest request) {
+        if (request == null) {
+            return null;
+        }
         return new ItemRequestDto(
                 request.getId(),
                 request.getDescription(),
@@ -15,14 +18,10 @@ public class ItemRequestMapper {
         );
     }
 
-    public static ItemRequest fromDto(ItemRequestDto requestDto) {
-        ItemRequest request = new ItemRequest();
-        request.setDescription(requestDto.getDescription());
-        request.setCreated(requestDto.getCreated());
-        return request;
-    }
-
     public static ItemRequestWithAnswersDto toDtoWithAnswers(ItemRequest request, List<ItemDto> items) {
+        if (request == null || items == null) {
+            return null;
+        }
         ItemRequestWithAnswersDto dto = new ItemRequestWithAnswersDto();
         dto.setId(request.getId());
         dto.setDescription(request.getDescription());

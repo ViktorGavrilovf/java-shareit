@@ -12,6 +12,7 @@ import ru.practicum.shareit.dto.booking.BookingStatus;
 import ru.practicum.shareit.dto.items.CommentDto;
 import ru.practicum.shareit.dto.items.ItemDto;
 import ru.practicum.shareit.dto.items.ItemWithBookingDto;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
@@ -152,7 +153,8 @@ public class ItemServiceImplIntegrationTest {
         assertThat(updated.getDescription()).isEqualTo("New Description");
         assertThat(updated.getAvailable()).isTrue();
 
-        Item itemFromDb = itemRepository.findById(item.getId()).orElseThrow();
+        Item itemFromDb = itemRepository.findById(item.getId()).orElseThrow(
+                () -> new NotFoundException("Вещь не найдена"));
 
         assertThat(itemFromDb.getName()).isEqualTo("New Name");
         assertThat(itemFromDb.getDescription()).isEqualTo("New Description");
@@ -170,7 +172,8 @@ public class ItemServiceImplIntegrationTest {
         assertThat(saved.getText()).isEqualTo("Great Text");
         assertThat(saved.getAuthorName()).isEqualTo(booker.getName());
 
-        Comment commentFromDb = commentRepository.findById(saved.getId()).orElseThrow();
+        Comment commentFromDb = commentRepository.findById(saved.getId()).orElseThrow(
+                () -> new NotFoundException("Комментарий не найден"));
         assertThat(commentFromDb.getText()).isEqualTo("Great Text");
         assertThat(commentFromDb.getAuthor().getId()).isEqualTo(booker.getId());
     }
